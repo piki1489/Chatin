@@ -1,0 +1,80 @@
+<div class="container">
+    <div class="nombre">CHATÍN
+    </div>
+    <h2 id="conectados">CLIENTES CONECTADOS:</h2>
+    <div class="mensajes">
+        <ul id="mensajes">
+            <li>Raimon: Que pasa tron</li>
+        </ul>
+    </div>
+    <div class="boton">
+        <div>
+            <label for="">NOMBRE</label>
+            <input id="inputNombre" type="text">
+        </div>
+        <div><label for="">MENSAJE</label>
+            <input id="inputMensaje" type="text">
+        </div>
+        <div><input id="inputEnviar" type="button" value="ENVIAR"></div>
+
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    //Código JS de la parte cliente
+
+
+    //Conectamos con el servidor de WS
+    const socket = io();
+
+    //Cuando haga click en el botón mostrar un console.log con un objeto de esta pinta:
+    /**
+
+    {
+            nombre: VALOR DEL INPUT NOMBRE,
+            mensaje: VALOR DEL INPUT MENSAJE
+    }
+
+    document.getElementById
+    BOTON.addEventListener
+        */
+
+    const inputNombre = document.getElementById('inputNombre');
+    const inputMensaje = document.getElementById('inputMensaje');
+
+    const inputEnviar = document.getElementById('inputEnviar');
+    const mensajes = document.getElementById('mensajes');
+
+    const conectados = document.getElementById('conectados');
+
+    inputEnviar.addEventListener('click', () => {
+        const data = {
+            nombre: inputNombre.value,
+            mensaje: inputMensaje.value
+        }
+        socket.emit('mensaje_chat', data);
+    });
+
+    socket.on('mensaje_chat', (data) => {
+        console.log(data);
+        //Generar un li con los datos de nombre y mensaje
+        // Agregar ese LI al UL de mensajes
+        // createElement y append
+        const li = document.createElement('li');
+        li.innerText = `${data.nombre}: ${data.mensaje}`;
+
+        mensajes.append(li);
+    });
+
+    socket.on('clientes_chat', (data) => {
+        //data es el número de los clientes conectados
+        //Modificar el H2 para que aparezcan los clientes conectados
+        conectados.innerText = `Clientes conectados: ${data}`;
+    });
+
+    socket.on('clientes_chat', (data) => {
+
+    });
+</script>
